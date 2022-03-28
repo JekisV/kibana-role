@@ -3,8 +3,19 @@
 
 - name: Verify
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
-  - name: Example assertion
-    assert:
-      that: true
+  - name: Check file kibana.yml
+    stat:
+      path: /etc/kibana/kibana.yml
+  - name: Check bin kibana
+    stat:
+      path: /usr/share/kibana/bin/kibana
+  - name: Check log dir
+    stat:
+      path: /var/log/kibana
+  - name: Verify kibana-web
+    uri:
+      url: "http://localhost:5601"
+    when: ansible_virtualization_type != 'docker'
+  
